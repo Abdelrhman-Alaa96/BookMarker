@@ -22,6 +22,7 @@ function addBookmark() {
     };
     var isNameValid = validateInput("bookmarkName", nameRegex);
     var isURLValid = validateInput("bookmarkURL", urlRegex);
+  
     if (isNameValid && isURLValid) {
      
         bookmarks.push(bookmark);
@@ -60,17 +61,22 @@ function clearForm() {
 function displayBookmarks(list) {
     var output = "";
     for (var i = 0; i < list.length; i++) {
+        // Ensure the URL has a protocol
+        var url = list[i].url;
+        if (!url.match(/^(https?:\/\/)/)) {
+            url = "https://" + url;
+        }
+
         output += `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${list[i].name}</td>
-        <td><a href="${list[i].url}" target="_blank" class="btn btn-success btn-sm">Visit</a></td>
-        <td><button onclick="deleteBookmark(${i})" class="btn btn-danger btn-sm">Delete</button></td>
-      </tr>`;
+            <tr>
+                <td>${i + 1}</td>
+                <td>${list[i].name}</td>
+                <td><a href="${url}" target="_blank" class="btn btn-success btn-sm">Visit</a></td>
+                <td><button onclick="deleteBookmark(${i})" class="btn btn-danger btn-sm">Delete</button></td>
+            </tr>`;
     }
     tableContent.innerHTML = output;
 }
-
 // Delete a bookmark
 function deleteBookmark(index) {
     bookmarks.splice(index, 1);
